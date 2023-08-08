@@ -64,4 +64,21 @@ install_version() {
         rm -rf "$install_path"
         fail "An error occurred while installing $TOOL_NAME $version."
     )
+		post_install "${install_path}"
+}
+
+post_install() {
+	lcoal -r command_shortcut_name="${ASDF_PLUGIN_MANAGER_SHORTCUT_NAME:-"pm"}"
+  local -r lib_dir="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+	local -r this_plugin_dir="$(dirname "${lib_dir}")"
+	local -r plugins_dir="$(dirname "${this_plugin_dir}")"
+  local -r pm_command_dir="${plugins_dir}/${command_shortcut_name}/lib/commands"
+  local -r pm_bin_dir="${plugins_dir}/${command_shortcut_name}/bin"
+	local -r command_shim="${pm_command_dir}/command-.bash"
+	if [ ! -f "${command_shim}" ]; then
+    mkdir -p "${pm_command_dir}"
+		# this is needed in order for asdf to print `No version is set for command asdf-plugin-manager' on pm command
+    mkdir -p "${pm_bin_dir}/bin"
+    ln -nfs "${ASDF_DIR}/shims/asdf-plugin-manager" "${command_shim}"
+	fi
 }
