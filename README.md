@@ -57,6 +57,9 @@ asdf global asdf-plugin-manager latest
 
 # Now asdf-plugin-manager commands are available
 asdf-plugin-manager version
+
+# the plugin manager can also be used through the regular `asdf` cli
+asdf pm
 ```
 
 # Example
